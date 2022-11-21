@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Posts" pattern="file[microservice-blog]:posts//*" />
+</component>

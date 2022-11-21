@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Message Broker" pattern="file[microservice-blog]:message-broker//*" />
+</component>

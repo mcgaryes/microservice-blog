@@ -1,0 +1,91 @@
+.App {
+  text-align: center;
+  display: flex;
+  justify-items: center;
+}
+
+.post-creator {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-content: flex-start;
+  max-width: 30vh;
+}
+
+.post-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  /*justify-self: center;*/
+  justify-content: center;
+  padding: 0;
+}
+
+.post {
+  text-align: left;
+  padding: 1rem 1rem 2rem 1rem;
+  border: solid darkgray thin;
+  width: 300px;
+  aspect-ratio: 1 / 1;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 15px;
+}
+
+@media only screen and (max-width: 700px) {
+  .post {
+    width: 80%;
+    aspect-ratio: auto;
+  }
+}
+
+.post h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.post input[type=text]  {
+  height: 44px;
+}
+
+.post input[type=submit]  {
+  height: 60px;
+}
+
+.comment-list {
+  flex-grow: 1;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  gap: 0.25rem;
+}
+
+.comment {
+  flex-shrink: 1;
+  justify-self: flex-start;
+
+}
+
+.comment p {
+  margin: 0;
+}
+
+.comment-creator {
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comment-creator label {
+  display: flex;
+  flex: 1;
+}
