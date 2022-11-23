@@ -41,7 +41,7 @@ app.post('/posts', async (req, res, next) => {
     posts[id] = {...req.body, id};
 
     try {
-        await axios.post("http://localhost:7784/events", {type: "POST_ADD", payload: posts[id]})
+        await axios.post("http://localhost:4100/events", {type: "POST_ADD", payload: posts[id]})
     } catch {
         console.error('message send failed')
     }
@@ -52,6 +52,6 @@ app.post('/posts', async (req, res, next) => {
 
 const server = http.createServer(app);
 
-server.listen(7782, () => {
-    console.log("POST SERVICE is running at http://localhost:7782")
+server.listen(4000, () => {
+    console.log("POST SERVICE is running at http://localhost:4000")
 });

@@ -6,52 +6,45 @@ const http = require("http");
 const axios = require("axios");
 
 const app = express();
+const events = [];
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
-app.post('/events', async (req, res, next) => {
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
-    console.log("received event:")
-    console.log(req.body)
 
-    /*
-    Send out events to everyone
-        console.log("COMMENTS SERVICE is running at http://localhost:7781")
-        console.log("POST SERVICE is running at http://localhost:7782")
-        console.log("QUERY SERVICE is running at http://localhost:7783")
-    */
+app.post('/events', (req, res, next) => {
 
-    try {
-        await axios.post('http://localhost:7781/events', req.body)
-    } catch {
-        console.log("couldnt send event to comments service");
-    }
+    console.log("Received event:")
+    console.log(req.body);
+    events.push(req.body);
 
-    try {
-        await axios.post('http://localhost:7782/events', req.body)
-    } catch {
-        console.log("couldnt send event to posts service");
-    }
-
-    try {
-        await axios.post('http://localhost:7783/events', req.body)
-    } catch {
-        console.log("couldnt send event to query service");
-    }
+    axios.post('http://localhost:4000/events', req.body)
+        .catch(e => console.log("could not post event to posts service")) // posts service
+    axios.post('http://localhost:4001/events', req.body)
+        .catch(e => console.log("could not post event to comments service")) // comments service
+    axios.post('http://localhost:4002/events', req.body)
+        .catch(e => console.log("could not post event to query service")) // query service
+    axios.post('http://localhost:4003/events', req.body)
+        .catch(e => console.log("could not post event to comment moderation service")) // comment moderator
 
     res.sendStatus(200);
 
 });
 
-app.get('/', (req, res, next) => {
-    res.status(200).send({status: "ok"})
+app.get('/events', (req, res) => {
+    res.status(200).send(events)
 });
 
 const server = http.createServer(app);
 
-server.listen(7784, () => {
-    console.log("MESSAGE BROKER SERVICE is running at http://localhost:7784")
+server.listen(4100, () => {
+    console.log("MESSAGE BROKER SERVICE is running at http://localhost:4100")
 });

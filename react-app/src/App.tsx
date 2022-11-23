@@ -15,30 +15,30 @@ function App() {
             return;
         }
 
-        axios.post("http://localhost:7782/posts", {title: postTitle})
-            .then(() => axios.get("http://localhost:7783/query"))
+        axios.post("http://localhost:4000/posts", {title: postTitle})
+            .then(() => axios.get("http://localhost:4002/query"))
             .then(res => setPosts(res.data))
 
     }, [postTitle]);
 
-    const addComment = useCallback((e: SyntheticEvent, postId: string) => {
-
-        e.preventDefault();
+    const addComment = useCallback((postId: string) => {
 
         if (!comment || comment === "") {
             alert("please enter a comment")
             return;
         }
 
-        axios.post("http://localhost:7781/comments", {pid: postId, comment})
-            .then(() => axios.get("http://localhost:7783/query"))
+        axios.post("http://localhost:4001/comments", {pid: postId, comment})
+            .then(() => axios.get("http://localhost:4002/query"))
             .then(res => setPosts(res.data))
 
     }, [comment]);
 
     useEffect(() => {
 
-        axios.get("http://localhost:7783/query")
+        console.log("query");
+
+        axios.get("http://localhost:4002/query")
             .then(res => {
                 setPosts(res.data);
             });
@@ -72,15 +72,33 @@ function App() {
 
                                     {
                                         post.comments.map((comment:any) => (
-                                            <li className={"comment"}>
-                                                <p>{comment.comment}</p>
+
+                                            <li key={comment.id} className={"comment"}>
+                                                {
+                                                    comment.moderationStatus === "PENDING" &&
+                                                    <p style={{color: "lightgray"}}>{comment.comment}</p>
+                                                }
+
+                                                {
+                                                    comment.moderationStatus === "REJECTED" &&
+                                                    <p style={{color: "red", textDecoration: "line-through"}}>{comment.comment}</p>
+                                                }
+
+                                                {
+                                                    comment.moderationStatus === "APPROVED" &&
+                                                    <p style={{color: "green"}}>{comment.comment}</p>
+                                                }
+
                                             </li>
                                         ))
                                     }
 
                                 </ul>
 
-                                <form className={"comment-creator"} onSubmit={(e) => addComment(e, post.id)}>
+                                <form className={"comment-creator"} onSubmit={(e) => {
+                                    e.preventDefault();
+                                    addComment( post.id)
+                                }}>
 
 
                                     <label>Add Comment:</label>

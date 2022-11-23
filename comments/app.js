@@ -22,9 +22,19 @@ app.use((req, res, next) => {
 
 app.post('/events', (req, res, next) => {
 
-    console.log("received event:")
-    console.log(res.body)
-    res.sendStatus(200);
+    switch (req.body.type) {
+        case "COMMENT_MODERATION_STATUS_CHANGE":
+            console.log("moderate comment", comments);
+            console.log(comments[req.body.payload.id]);
+            comments[req.body.payload.id] = req.body.payload
+
+            axios.post("http://localhost:4100/events", {type: "COMMENT_UPDATED", payload: comments[req.body.payload.id]})
+            break;
+        default:
+            console.log("Unhandled event:", req.body.type)
+    }
+
+    res.status(200).send()
 
 });
 
@@ -37,11 +47,11 @@ app.post('/comments', async (req, res, next) => {
     // add comment to local data store
 
     let id = randomBytes(5).toString('hex');
-    comments[id] = {...req.body, id: id};
+    comments[id] = {...req.body, id: id, moderationStatus: "PENDING"};
 
     // send event to event broker http://localhost:7784
     try {
-        await axios.post("http://localhost:7784/events", {type: "COMMENT_ADD", payload: comments[id]})
+        await axios.post("http://localhost:4100/events", {type: "COMMENT_ADD", payload: comments[id]})
     } catch {
         console.error('message send failed')
     }
@@ -52,6 +62,6 @@ app.post('/comments', async (req, res, next) => {
 
 const server = http.createServer(app);
 
-server.listen(7781, () => {
-    console.log("COMMENTS SERVICE is running at http://localhost:7781")
+server.listen(4001, () => {
+    console.log("COMMENTS SERVICE is running at http://localhost:4001")
 });
