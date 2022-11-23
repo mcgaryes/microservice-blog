@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1 # number of pods
+  selector: # selector and template work together
+    matchLabels:
+      app: posts
+  template: # type of pod to creatre
+    metadata:
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: mcgaryes/posts:0.0.1
