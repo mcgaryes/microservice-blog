@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Comment Moderator" pattern="file[microservice-blog]:comment-moderator//*" />
+</component>
